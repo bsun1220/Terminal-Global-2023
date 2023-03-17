@@ -80,7 +80,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             if self.trigger_turr(game_state) not in [-1, 2, 3]:
                 CORNER = False
 
-        self.attack_line(game_state)
+        self.attack_form(game_state)
         self.main_defense(game_state)
 
         if self.check(game_state):
@@ -88,10 +88,10 @@ class AlgoStrategy(gamelib.AlgoCore):
             game_state.attempt_remove(DONOTBUILD)
         elif [6, 10] in DONOTBUILD:
             DONOTBUILD.remove([6, 10])
-        self.defend_line(game_state)
-        if game_state.turn_number >= 10 and self.dying(game_state):
+        self.defense_form(game_state)
+        if game_state.turn_number >= 11 and self.dying(game_state):
             self.stop_self_harm(game_state)
-        elif game_state.turn_number >= 10 and len(self.miss_defend_line(game_state)) == 0:
+        elif game_state.turn_number >= 9.9 and len(self.miss_defend_line(game_state)) == 0:
             number_enemy_support = self.scan_enemy_for_units(game_state, "EF")
             divisor = max(9 - number_enemy_support, 5)
             game_state.attempt_spawn(INTERCEPTOR, defend_locations[0], int(
@@ -117,7 +117,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             else:
                 self.save_me(game_state, self.miss_defend_line(game_state))
                 game_state.attempt_spawn(SCOUT, attack_location, 1000)
-        elif game_state.turn_number <= 10:
+        elif game_state.turn_number <= 9:
             if closest_enemy_turret_row == -1 or closest_enemy_turret_row == 3:
                 if self.optimal_spawn(game_state):
                     game_state.attempt_spawn(
@@ -131,7 +131,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                     game_state.attempt_spawn(DEMOLISHER, attack_location, 10)
             else:
                 game_state.attempt_spawn(DEMOLISHER, attack_location, 10)
-        elif game_state.turn_number % 3 == 0 and game_state.turn_number <= 20:
+        elif game_state.turn_number % 3 == 1 and game_state.turn_number <= 20:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.miss_defend_line(game_state)) != 0:
@@ -181,7 +181,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                 else:
                     game_state.attempt_spawn(
                         DEMOLISHER, attack_location, self.demolisher_planner(game_state))
-        elif game_state.turn_number % 4 == 0 and game_state.turn_number <= 32:
+        elif game_state.turn_number % 4 == 1 and game_state.turn_number <= 30:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.miss_defend_line(game_state)) != 0:
@@ -229,7 +229,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                 else:
                     game_state.attempt_spawn(
                         DEMOLISHER, attack_location, self.demolisher_planner(game_state))
-        elif game_state.turn_number % 4 == 0:
+        elif game_state.turn_number % 4 == 1:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.miss_defend_line(game_state)) != 0:
@@ -282,32 +282,6 @@ class AlgoStrategy(gamelib.AlgoCore):
                     game_state.attempt_spawn(
                         DEMOLISHER, attack_location, self.demolisher_planner(game_state))
 
-    def filter_blocked_locations(self, locations, game_state):
-        filtered = []
-        for location in locations:
-            if not game_state.contains_stationary_unit(location):
-                filtered.append(location)
-        return filtered
-
-    def least_damage_spawn_location(self, game_state, location_options):
-        """
-        This function will help us guess which location is the safest to spawn moving units from.
-        It gets the path the unit will take then checks locations on that path to
-        estimate the path's damage risk.
-        """
-
-        damages = []
-        # Get the damage estimate each path will take
-        for location in location_options:
-            path = game_state.find_path_to_edge(location)
-            damage = 0
-            for path_location in path:
-                # Get number of enemy turrets that can attack each location and multiply by turret damage
-                damage += len(game_state.get_attackers(path_location, 0))
-            damages.append(damage)
-
-        # Now just return the location that takes the least damage
-        return location_options[damages.index(min(damages))]
 
     def damage_spawn_location(self, game_state, location):
         path = game_state.find_path_to_edge(location)
@@ -317,16 +291,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         return damage
 
-    def most_attacked_turret(self):
-        d = self.defences_attacked
-
-        max_loc, max_val = (0, 0)
-        for key, values in d.items():
-            if values > max_val and values > 0:
-                max_loc = key
-                max_val = values
-
-        return max_loc
 
     def build(self, game_state, buildings):
         for building in buildings:
@@ -366,7 +330,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                     need_repair.append(building)
         self.refund(game_state, need_repair)
 
-    def attack_line(self, game_state):
+    def attack_form(self, game_state):
         line = [
             [WALL, [15, 2], False],
             [WALL, [14, 2], False],
@@ -382,7 +346,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.build(game_state, line)
         self.repair(game_state, line)
 
-    def defend_line(self, game_state):
+    def defense_form(self, game_state):
         line = [
             [TURRET, [25, 12], True],
             [WALL, [27, 13], False],
