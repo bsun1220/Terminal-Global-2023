@@ -35,7 +35,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         self.begin_plan(game_state)
 
-
         game_state.submit_turn()
 
     def find_result(self, turr):
@@ -84,7 +83,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.attack_line(game_state)
         self.main_defense(game_state)
 
-        if self.scan1(game_state):
+        if self.check(game_state):
             DONOTBUILD.append([6, 10])
             game_state.attempt_remove(DONOTBUILD)
         elif [6, 10] in DONOTBUILD:
@@ -433,7 +432,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.repair(game_state, defense)
 
     def support(self, game_state):
-        if CORNER and game_state.turn_number <= 32:
+        if CORNER and game_state.turn_number <= 31:
             self.support_only_row_1(game_state)
         else:
             support = [
@@ -457,14 +456,14 @@ class AlgoStrategy(gamelib.AlgoCore):
             [SUPPORT, [4, 9], True],
         ]
         self.buildupgrade(
-            game_state, support[:int(game_state.turn_number / 5)])
+            game_state, support[:game_state.turn_number // 5])
 
     def horizontal(self, game_state):
         x = 4
         y = 14
-        data = []
+        df = []
         row = []
-        while (len(data) < 3):
+        while (len(df) < 3):
             if game_state.game_map[x, y]:
                 row.append(game_state.game_map[x, y][0].unit_type)
             else:
@@ -472,7 +471,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             if x == 14:
                 y += 1
                 x = 4
-                data.append(row)
+                df.append(row)
                 row = []
             else:
                 x += 1
@@ -482,7 +481,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             y = 13
             builds = []
             attack = False
-            for loc in data[i]:
+            for loc in df[i]:
                 if loc == "DF":
                     y = 11 + i
                     attack = True
@@ -507,46 +506,46 @@ class AlgoStrategy(gamelib.AlgoCore):
     def vertical(self, game_state):
         if game_state.game_map[3, 14]:
             if game_state.game_map[3, 14][0].unit_type == "DF":
-                ver = [[WALL, [5, 12]]]
-                self.build(game_state, ver)
-                self.refund(game_state, ver)
+                vert = [[WALL, [5, 12]]]
+                self.build(game_state, vert)
+                self.refund(game_state, vert)
                 return True
         for i in [[2, 14], [3, 15]]:
             if game_state.game_map[i]:
                 if game_state.game_map[i][0].unit_type == "DF":
-                    ver = [
+                    vert = [
                         [WALL, [5, 13]],
                         [WALL, [7, 10]],
                         [WALL, [7, 11]],
                         [WALL, [7, 12]],
                         [WALL, [7, 13]],
                     ]
-                    self.build(game_state, ver)
-                    self.refund(game_state, ver)
+                    self.build(game_state, vert)
+                    self.refund(game_state, vert)
                     return True
         for i in [[1, 14], [2, 15], [3, 16], [4, 17]]:
             if game_state.game_map[i] and game_state.turn_number <= 32:
                 if game_state.game_map[i][0].unit_type == "DF":
-                    ver = [
+                    vert = [
                         [WALL, [6, 11]],
                         [WALL, [6, 12]],
                     ]
-                    self.build(game_state, ver)
-                    self.refund(game_state, ver)
+                    self.build(game_state, vert)
+                    self.refund(game_state, vert)
                     return True
-        ver = [
+        vert = [
             [WALL, [6, 11]],
             [WALL, [6, 12]],
             [WALL, [6, 13]],
         ]
-        self.build(game_state, ver)
-        self.refund(game_state, ver)
+        self.build(game_state, vert)
+        self.refund(game_state, vert)
         return True
 
-    def scan1(self, game_state):
+    def check(self, game_state):
         x = 4
         y = 14
-        while (x <= 14):
+        while (x <= y):
             if game_state.game_map[x, y]:
                 if game_state.game_map[x, y][0].unit_type == "DF":
                     return True
@@ -607,7 +606,6 @@ class AlgoStrategy(gamelib.AlgoCore):
             to_check = [[2, 11], [3, 11], [4, 11], [5, 11]]
         return all(list(map(lambda x: game_state.contains_stationary_unit(x) is False, to_check)))
 
-    # Returns True if enemy breaking their CORNER walls
     def dead(self, game_state):
         locations = [[0, 14], [27, 14]]
         for location in locations:
@@ -670,10 +668,10 @@ class AlgoStrategy(gamelib.AlgoCore):
     def count_support(self, game_state):
         center = [10, 9]
         radius = 15
-        locations_to_check = list(filter(lambda x: (game_state.game_map.in_arena_bounds(
+        locations = list(filter(lambda x: (game_state.game_map.in_arena_bounds(
             x) and x[1] <= 13), game_state.game_map.get_locations_in_range(center, radius)))
         support_count = 0
-        for loc in locations_to_check:
+        for loc in locations:
             result_list = game_state.game_map[loc]
             if len(result_list) > 0:
                 if result_list[0].unit_type == "EF":
