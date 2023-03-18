@@ -588,7 +588,7 @@ class AlgoStrategy(gamelib.AlgoCore):
     def construct_backup(self, game_state):
         sp_amount = game_state.get_resource(SP, 0)
         old_sp = sp_amount
-        if sp_amount is None or sp_amount < 45 or sp_amount > 1000:
+        if sp_amount is None or sp_amount < 30 or sp_amount > 1000:
             return 
         pink_filters_points = [[24, 11], [14, 9], [15, 9], [22, 9], [21, 8]]
         game_state.attempt_spawn(TURRET, pink_filters_points)
