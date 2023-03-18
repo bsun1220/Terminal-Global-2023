@@ -134,7 +134,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                     game_state.attempt_spawn(DEMOLISHER, attack_location, 10)
             else:
                 game_state.attempt_spawn(DEMOLISHER, attack_location, 10)
-        elif game_state.turn_number % 3 == 1 and game_state.turn_number <= 20:
+        elif game_state.turn_number % 3 == 0 and game_state.turn_number <= 20:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.hold_line(game_state)) != 0:
@@ -184,7 +184,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                 else:
                     game_state.attempt_spawn(
                         DEMOLISHER, attack_location, self.demolisher_planner(game_state))
-        elif game_state.turn_number % 4 == 1 and game_state.turn_number <= 30:
+        elif game_state.turn_number % 4 == 2 and game_state.turn_number <= 31:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.hold_line(game_state)) != 0:
@@ -232,7 +232,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                 else:
                     game_state.attempt_spawn(
                         DEMOLISHER, attack_location, self.demolisher_planner(game_state))
-        elif game_state.turn_number % 4 == 1:
+        elif game_state.turn_number % 4 == 0:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.hold_line(game_state)) != 0:
