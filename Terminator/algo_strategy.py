@@ -107,19 +107,19 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.holy(game_state, self.hold_line(game_state))
 
     def attack(self, game_state):
-        attack_location = [14, 0]
-        defend_location = [5, 8]
         row_1_spawn = [1, 12]
         row_2_spawn = [2, 11]
         closest_enemy_turret_row = self.trigger_turr(game_state)
+        attack_location = [14, 0]
+        defend_location = [5, 8]
 
         if self.damage_spawn_location(game_state, attack_location) == 0 and game_state.get_resource(SP, 1) <= 5:
             self.support(game_state)
             if len(self.hold_line(game_state)) == 0:
-                game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                game_state.attempt_spawn(SCOUT, attack_location, 500)
             else:
                 self.holy(game_state, self.hold_line(game_state))
-                game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                game_state.attempt_spawn(SCOUT, attack_location, 500)
         elif game_state.turn_number <= 9:
             if closest_enemy_turret_row == -1 or closest_enemy_turret_row == 3:
                 if self.getting_good_placement(game_state):
@@ -142,48 +142,48 @@ class AlgoStrategy(gamelib.AlgoCore):
 
             if closest_enemy_turret_row == -1 or closest_enemy_turret_row == 3:
                 if self.getting_good_placement(game_state):
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(DEMOLISHER, self.getting_good_placement(
-                            game_state), self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            game_state), self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(DEMOLISHER, self.getting_good_placement(
-                            game_state), self.demolisher_planner(game_state))
+                            game_state), self.demolish(game_state))
                 else:
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, defend_location, self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            DEMOLISHER, defend_location, self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, attack_location, self.demolish(game_state))
             elif closest_enemy_turret_row == 2:
                 self.support_only_row_1(game_state)
                 if self.getting_good_placement(game_state):
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, row_2_spawn, self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            DEMOLISHER, row_2_spawn, self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, row_2_spawn, self.demolisher_planner(game_state))
+                            DEMOLISHER, row_2_spawn, self.demolish(game_state))
                 else:
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, defend_location, self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            DEMOLISHER, defend_location, self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, attack_location, self.demolish(game_state))
             else:
                 self.support(game_state)
-                if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                     game_state.attempt_spawn(
-                        DEMOLISHER, defend_location, self.demolisher_planner(game_state))
-                    game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                        DEMOLISHER, defend_location, self.demolish(game_state))
+                    game_state.attempt_spawn(SCOUT, attack_location, 500)
                 else:
                     game_state.attempt_spawn(
-                        DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                        DEMOLISHER, attack_location, self.demolish(game_state))
         elif game_state.turn_number % 4 == 2 and game_state.turn_number <= 31:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
@@ -192,98 +192,98 @@ class AlgoStrategy(gamelib.AlgoCore):
             self.support(game_state)
             if closest_enemy_turret_row == -1 or closest_enemy_turret_row == 3:
                 if self.getting_good_placement(game_state):
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(DEMOLISHER, self.getting_good_placement(
-                            game_state), self.demolisher_planner(game_state))
+                            game_state), self.demolish(game_state))
                         game_state.attempt_spawn(SCOUT, attack_location, 1000)
                     else:
                         game_state.attempt_spawn(DEMOLISHER, self.getting_good_placement(
-                            game_state), self.demolisher_planner(game_state))
+                            game_state), self.demolish(game_state))
                 else:
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, defend_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, defend_location, self.demolish(game_state))
                         game_state.attempt_spawn(SCOUT, attack_location, 1000)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, attack_location, self.demolish(game_state))
             elif closest_enemy_turret_row == 2:
                 if self.getting_good_placement(game_state):
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, row_2_spawn, self.demolisher_planner(game_state))
+                            DEMOLISHER, row_2_spawn, self.demolish(game_state))
                         game_state.attempt_spawn(SCOUT, attack_location, 1000)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, row_2_spawn, self.demolisher_planner(game_state))
+                            DEMOLISHER, row_2_spawn, self.demolish(game_state))
                 else:
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, defend_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, defend_location, self.demolish(game_state))
                         game_state.attempt_spawn(SCOUT, attack_location, 1000)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, attack_location, self.demolish(game_state))
             else:
-                if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                     game_state.attempt_spawn(
-                        DEMOLISHER, defend_location, self.demolisher_planner(game_state))
+                        DEMOLISHER, defend_location, self.demolish(game_state))
                     game_state.attempt_spawn(SCOUT, attack_location, 1000)
                 else:
                     game_state.attempt_spawn(
-                        DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                        DEMOLISHER, attack_location, self.demolish(game_state))
         elif game_state.turn_number % 4 == 0:
             if not self.horizontal(game_state):
                 self.vertical(game_state)
             if len(self.hold_line(game_state)) != 0:
                 self.holy(game_state, self.hold_line(game_state))
             self.support(game_state)
-            if self.count_support(game_state) >= 5 and game_state.get_resource(MP) >= 25:
+            if self.support_number(game_state) >= 5 and game_state.get_resource(MP) >= 25:
                 game_state.attempt_spawn(SCOUT, attack_location, int(
                     game_state.get_resource(MP) / 2))
                 game_state.attempt_spawn(SCOUT, [14, 0], 1000)
             if closest_enemy_turret_row == -1 or closest_enemy_turret_row == 3:
                 if self.getting_good_placement(game_state):
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(DEMOLISHER, self.getting_good_placement(
-                            game_state), self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            game_state), self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(DEMOLISHER, self.getting_good_placement(
-                            game_state), self.demolisher_planner(game_state))
+                            game_state), self.demolish(game_state))
                 else:
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, defend_location, self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            DEMOLISHER, defend_location, self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, attack_location, self.demolish(game_state))
             elif closest_enemy_turret_row == 2:
                 if self.getting_good_placement(game_state):
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, row_2_spawn, self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            DEMOLISHER, row_2_spawn, self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, row_2_spawn, self.demolisher_planner(game_state))
+                            DEMOLISHER, row_2_spawn, self.demolish(game_state))
                 else:
-                    if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                    if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                         game_state.attempt_spawn(
-                            DEMOLISHER, defend_location, self.demolisher_planner(game_state))
-                        game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                            DEMOLISHER, defend_location, self.demolish(game_state))
+                        game_state.attempt_spawn(SCOUT, attack_location, 500)
                     else:
                         game_state.attempt_spawn(
-                            DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                            DEMOLISHER, attack_location, self.demolish(game_state))
             else:
-                if 3 * self.demolisher_planner(game_state) < game_state.get_resource(MP):
+                if 3 * self.demolish(game_state) < game_state.get_resource(MP):
                     game_state.attempt_spawn(
-                        DEMOLISHER, defend_location, self.demolisher_planner(game_state))
-                    game_state.attempt_spawn(SCOUT, attack_location, 1000)
+                        DEMOLISHER, defend_location, self.demolish(game_state))
+                    game_state.attempt_spawn(SCOUT, attack_location, 500)
                 else:
                     game_state.attempt_spawn(
-                        DEMOLISHER, attack_location, self.demolisher_planner(game_state))
+                        DEMOLISHER, attack_location, self.demolish(game_state))
 
 
     def damage_spawn_location(self, game_state, location):
@@ -312,19 +312,6 @@ class AlgoStrategy(gamelib.AlgoCore):
                 if building[2]:
                     game_state.attempt_upgrade(building[1])
 
-    def refund(self, game_state, buildings):
-        for building in buildings:
-            game_state.attempt_remove([building[1]])
-
-    def scan_enemy_for_units(self, game_state, unit_to_search):
-        number_of_units = 0
-        for y in range(14, 28):
-            for x in range(2, 28):
-                if game_state.game_map[x, y]:
-                    if game_state.game_map[x, y][0].unit_type == unit_to_search:
-                        number_of_units += 1
-        return number_of_units
-
     def revive(self, game_state, buildings):
         need_repair = []
         for building in buildings:
@@ -340,15 +327,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.build(game_state, line)
         self.revive(game_state, line)
 
-    def defense_form(self, game_state):
-        line = [[TURRET, [25, 12], True],[WALL, [27, 13], False],[WALL, [26, 13], False],[WALL, [25, 11], False],[WALL, [24, 10], False],[WALL, [23, 9], True],
-            [WALL, [22, 8], True],[WALL, [21, 7], False],[WALL, [20, 6], False],[WALL, [19, 5], False],
-            [WALL, [18, 4], False],[WALL, [17, 3], False],[WALL, [16, 2], False]]
-
-        self.build(game_state, line)
-        self.deploy(game_state, line)
-        self.revive(game_state, line)
-
+    
     def main_defense_form(self, game_state):
         defense = [[TURRET, [3, 13], True],[WALL, [4, 13], True],[TURRET, [3, 12], True],
         [WALL, [4, 12], True],[TURRET, [6, 9], True],[WALL, [7, 9], True],[TURRET, [6, 9], True],[WALL, [2, 13], True],
@@ -363,6 +342,15 @@ class AlgoStrategy(gamelib.AlgoCore):
         [TURRET, [24, 11], False]]
         self.deploy(game_state, defense)
         self.revive(game_state, defense)
+
+    def defense_form(self, game_state):
+        line = [[TURRET, [25, 12], True],[WALL, [27, 13], False],[WALL, [26, 13], False],[WALL, [25, 11], False],[WALL, [24, 10], False],[WALL, [23, 9], True],
+            [WALL, [22, 8], True],[WALL, [21, 7], False],[WALL, [20, 6], False],[WALL, [19, 5], False],
+            [WALL, [18, 4], False],[WALL, [17, 3], False],[WALL, [16, 2], False]]
+
+        self.build(game_state, line)
+        self.deploy(game_state, line)
+        self.revive(game_state, line)
 
     def support(self, game_state):
         if EDGE and game_state.turn_number <= 31:
@@ -380,6 +368,160 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         self.deploy(
             game_state, support[:game_state.turn_number // 5])
+
+    def check(self, game_state):
+        x = 4
+        y = 14
+        while (x <= y):
+            if game_state.game_map[x, y]:
+                if game_state.game_map[x, y][0].unit_type == "DF":
+                    return True
+            x += 1
+        return False
+
+    def holy(self, game_state, list):
+        pref = [[21, 7],[22, 8],[20, 6],[19, 5],[18, 4],[17, 3],[16, 2] ]
+
+        for i in pref:
+            if i in list:
+                number_enemy_support = self.scan_enemy_for_units(
+                    game_state, "EF")
+                divisor = max(8 - number_enemy_support, 3)
+                game_state.attempt_spawn(INTERCEPTOR, i, int(
+                    game_state.get_resource(MP, 1) / divisor))
+                break
+
+    def hold_line(self, game_state):
+        x = []
+        line = [[25, 11],[24, 10],[23, 9],[22, 8],[21, 7],[20, 6],[19, 5],[18, 4],[17, 3],[16, 2]]
+
+        for i in line:
+            if not game_state.contains_stationary_unit(i):
+                x.append(i)
+        return x
+
+    def getting_good_placement(self, game_state):
+        row_1_spawn = [1, 12]
+        row_2_spawn = [2, 11]
+        if self.isunable(game_state, row_1_spawn):
+            return [1, 12]
+        elif self.isunable(game_state, row_2_spawn):
+            return [2, 11]
+        return False
+
+    def isunable(self, game_state, location):
+        if location == [1, 12]:
+            to_check = [[1, 12], [2, 12], [2, 11], [3, 11], [4, 11], [5, 11]]
+        elif location == [2, 11]:
+            to_check = [[2, 11], [3, 11], [4, 11], [5, 11]]
+        return all(list(map(lambda x: game_state.contains_stationary_unit(x) is False, to_check)))
+
+    
+    def dying(self, game_state):
+        locations = [[0, 14], [27, 14]]
+        for location in locations:
+            if not game_state.contains_stationary_unit(location) and game_state.get_resource(MP, 1) >= 6:
+                reinforce = [[TURRET, [26, 12], True],[WALL, [27, 13], False],[WALL, [26, 13], False]]
+                self.deploy(game_state, reinforce)
+                return True
+        return False
+
+    def dead(self, game_state):
+        locations = [[0, 14], [27, 14]]
+        for location in locations:
+            if game_state.contains_stationary_unit(location):
+                if game_state.game_map[location][0].unit_type == "FF" and game_state.game_map[location][0].pending_removal:
+                    reinforce = [[TURRET, [26, 12], True],[WALL, [27, 13], False],[WALL, [26, 13], False]]
+                    self.deploy(game_state, reinforce)
+                    return True
+        return False
+
+    def stop_self_harm(self, game_state):
+        if game_state.get_resource(MP) >= 8.9:
+            defend_location = [5, 8]
+            row_2_spawn = [2, 11]
+            if not self.horizontal(game_state):
+                self.vertical(game_state)
+            self.support(game_state)
+            closest_enemy_turret_row = self.trigger_turr(
+                game_state)
+            if closest_enemy_turret_row in [-1, 2, 3]:
+                if self.getting_good_placement(game_state):
+                    game_state.attempt_spawn(DEMOLISHER, row_2_spawn, 1000)
+                else:
+                    game_state.attempt_spawn(DEMOLISHER, defend_location, 1000)
+            else:
+                game_state.attempt_spawn(DEMOLISHER, defend_location, 1000)
+    
+    def scan_enemy_for_units(self, game_state, unit_to_search):
+        number_of_units = 0
+        for y in range(14, 28):
+            for x in range(2, 28):
+                if game_state.game_map[x, y]:
+                    if game_state.game_map[x, y][0].unit_type == unit_to_search:
+                        number_of_units += 1
+        return number_of_units
+
+    def demolish(self, game_state):
+        center = [7, 17]
+        radius = 6
+        locations = list(filter(lambda x: (game_state.game_map.in_arena_bounds(
+            x) and x[0] <= 13), game_state.game_map.get_locations_in_range(center, radius)))
+        turret_counts = 0
+        for loc in locations:
+            result_list = game_state.game_map[loc]
+            if len(result_list) > 0:
+                if result_list[0].unit_type == "DF":
+                    turret_counts += 2
+        if game_state.get_resource(SP, 1) >= 8:
+            turret_counts += 1
+        return turret_counts + 2
+
+
+    def refund(self, game_state, buildings):
+        for building in buildings:
+            game_state.attempt_remove([building[1]])
+
+
+    def support_number(self, game_state):
+        center = [10, 9]
+        radius = 15
+        locations = list(filter(lambda x: (game_state.game_map.in_arena_bounds(
+            x) and x[1] <= 13), game_state.game_map.get_locations_in_range(center, radius)))
+        support_count = 0
+        for loc in locations:
+            result_list = game_state.game_map[loc]
+            if len(result_list) > 0:
+                if result_list[0].unit_type == "EF":
+                    support_count += 1
+        return support_count
+    
+    def vertical(self, game_state):
+        if game_state.game_map[3, 14]:
+            if game_state.game_map[3, 14][0].unit_type == "DF":
+                vert = [[WALL, [5, 12]]]
+                self.build(game_state, vert)
+                self.refund(game_state, vert)
+                return True
+        for i in [[2, 14], [3, 15]]:
+            if game_state.game_map[i]:
+                if game_state.game_map[i][0].unit_type == "DF":
+                    vert = [[WALL, [5, 13]],[WALL, [7, 10]],[WALL, [7, 11]],[WALL, [7, 12]],[WALL, [7, 13]]]
+                    self.build(game_state, vert)
+                    self.refund(game_state, vert)
+                    return True
+        for i in [[1, 14], [2, 15], [3, 16], [4, 17]]:
+            if game_state.game_map[i] and game_state.turn_number <= 32:
+                if game_state.game_map[i][0].unit_type == "DF":
+                    vert = [[WALL, [6, 11]],[WALL, [6, 12]]]
+                    self.build(game_state, vert)
+                    self.refund(game_state, vert)
+                    return True
+        vert = [[WALL, [6, 11]],[WALL, [6, 12]],[WALL, [6, 13]]]
+
+        self.build(game_state, vert)
+        self.refund(game_state, vert)
+        return True
 
     def horizontal(self, game_state):
         x = 4
@@ -425,144 +567,6 @@ class AlgoStrategy(gamelib.AlgoCore):
                             z += 1
                 return True
         return False
-
-    def vertical(self, game_state):
-        if game_state.game_map[3, 14]:
-            if game_state.game_map[3, 14][0].unit_type == "DF":
-                vert = [[WALL, [5, 12]]]
-                self.build(game_state, vert)
-                self.refund(game_state, vert)
-                return True
-        for i in [[2, 14], [3, 15]]:
-            if game_state.game_map[i]:
-                if game_state.game_map[i][0].unit_type == "DF":
-                    vert = [[WALL, [5, 13]],[WALL, [7, 10]],[WALL, [7, 11]],[WALL, [7, 12]],[WALL, [7, 13]]]
-                    self.build(game_state, vert)
-                    self.refund(game_state, vert)
-                    return True
-        for i in [[1, 14], [2, 15], [3, 16], [4, 17]]:
-            if game_state.game_map[i] and game_state.turn_number <= 32:
-                if game_state.game_map[i][0].unit_type == "DF":
-                    vert = [[WALL, [6, 11]],[WALL, [6, 12]]]
-                    self.build(game_state, vert)
-                    self.refund(game_state, vert)
-                    return True
-        vert = [[WALL, [6, 11]],[WALL, [6, 12]],[WALL, [6, 13]]]
-
-        self.build(game_state, vert)
-        self.refund(game_state, vert)
-        return True
-
-    def check(self, game_state):
-        x = 4
-        y = 14
-        while (x <= y):
-            if game_state.game_map[x, y]:
-                if game_state.game_map[x, y][0].unit_type == "DF":
-                    return True
-            x += 1
-        return False
-
-    def hold_line(self, game_state):
-        x = []
-        line = [[25, 11],[24, 10],[23, 9],[22, 8],[21, 7],[20, 6],[19, 5],[18, 4],[17, 3],[16, 2]]
-
-        for i in line:
-            if not game_state.contains_stationary_unit(i):
-                x.append(i)
-        return x
-
-    def holy(self, game_state, list):
-        pref = [[21, 7],[22, 8],[20, 6],[19, 5],[18, 4],[17, 3],[16, 2] ]
-
-        for i in pref:
-            if i in list:
-                number_enemy_support = self.scan_enemy_for_units(
-                    game_state, "EF")
-                divisor = max(8 - number_enemy_support, 3)
-                game_state.attempt_spawn(INTERCEPTOR, i, int(
-                    game_state.get_resource(MP, 1) / divisor))
-                break
-
-    def getting_good_placement(self, game_state):
-        row_1_spawn = [1, 12]
-        row_2_spawn = [2, 11]
-        if self.isunable(game_state, row_1_spawn):
-            return [1, 12]
-        elif self.isunable(game_state, row_2_spawn):
-            return [2, 11]
-        return False
-
-    def isunable(self, game_state, location):
-        if location == [1, 12]:
-            to_check = [[1, 12], [2, 12], [2, 11], [3, 11], [4, 11], [5, 11]]
-        elif location == [2, 11]:
-            to_check = [[2, 11], [3, 11], [4, 11], [5, 11]]
-        return all(list(map(lambda x: game_state.contains_stationary_unit(x) is False, to_check)))
-
-    def dead(self, game_state):
-        locations = [[0, 14], [27, 14]]
-        for location in locations:
-            if game_state.contains_stationary_unit(location):
-                if game_state.game_map[location][0].unit_type == "FF" and game_state.game_map[location][0].pending_removal:
-                    reinforce = [[TURRET, [26, 12], True],[WALL, [27, 13], False],[WALL, [26, 13], False]]
-                    self.deploy(game_state, reinforce)
-                    return True
-        return False
-
-    def dying(self, game_state):
-        locations = [[0, 14], [27, 14]]
-        for location in locations:
-            if not game_state.contains_stationary_unit(location) and game_state.get_resource(MP, 1) >= 6:
-                reinforce = [[TURRET, [26, 12], True],[WALL, [27, 13], False],[WALL, [26, 13], False]]
-                self.deploy(game_state, reinforce)
-                return True
-        return False
-
-    def stop_self_harm(self, game_state):
-        if game_state.get_resource(MP) >= 8.9:
-            defend_location = [5, 8]
-            row_2_spawn = [2, 11]
-            if not self.horizontal(game_state):
-                self.vertical(game_state)
-            self.support(game_state)
-            closest_enemy_turret_row = self.trigger_turr(
-                game_state)
-            if closest_enemy_turret_row in [-1, 2, 3]:
-                if self.getting_good_placement(game_state):
-                    game_state.attempt_spawn(DEMOLISHER, row_2_spawn, 1000)
-                else:
-                    game_state.attempt_spawn(DEMOLISHER, defend_location, 1000)
-            else:
-                game_state.attempt_spawn(DEMOLISHER, defend_location, 1000)
-
-    def demolisher_planner(self, game_state):
-        center = [7, 17]
-        radius = 6
-        locations = list(filter(lambda x: (game_state.game_map.in_arena_bounds(
-            x) and x[0] <= 13), game_state.game_map.get_locations_in_range(center, radius)))
-        turret_counts = 0
-        for loc in locations:
-            result_list = game_state.game_map[loc]
-            if len(result_list) > 0:
-                if result_list[0].unit_type == "DF":
-                    turret_counts += 2
-        if game_state.get_resource(SP, 1) >= 8:
-            turret_counts += 1
-        return turret_counts + 2
-
-    def count_support(self, game_state):
-        center = [10, 9]
-        radius = 15
-        locations = list(filter(lambda x: (game_state.game_map.in_arena_bounds(
-            x) and x[1] <= 13), game_state.game_map.get_locations_in_range(center, radius)))
-        support_count = 0
-        for loc in locations:
-            result_list = game_state.game_map[loc]
-            if len(result_list) > 0:
-                if result_list[0].unit_type == "EF":
-                    support_count += 1
-        return support_count
     
     def on_action_frame(self, turn_string):
         """
@@ -588,7 +592,7 @@ class AlgoStrategy(gamelib.AlgoCore):
     def construct_backup(self, game_state):
         sp_amount = game_state.get_resource(SP, 0)
         old_sp = sp_amount
-        if sp_amount is None or sp_amount < 30 or sp_amount > 1000:
+        if sp_amount is None or sp_amount < 25 or sp_amount > 1000:
             return 
         pink_filters_points = [[24, 11], [14, 9], [15, 9], [22, 9], [21, 8]]
         game_state.attempt_spawn(TURRET, pink_filters_points)
@@ -605,7 +609,6 @@ class AlgoStrategy(gamelib.AlgoCore):
         game_state.attempt_spawn(TURRET, pink_filters_points)
         game_state.attempt_upgrade(pink_filters_points)
         
-
 
 if __name__ == "__main__":
     algo = AlgoStrategy()
